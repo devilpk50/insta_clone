@@ -1,6 +1,6 @@
 from django.shortcuts import render ,reverse, get_object_or_404
-from post.models import Post, Like
-from post.forms import PostForm
+from post.models import Post, Like, Comment
+from post.forms import PostForm, CommentForm
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -55,3 +55,17 @@ def like_post(request, post_id):
             like.is_Liked = True
         like.save()
     return JsonResponse({"is_Liked": like.is_Liked, "like_count": post.like_count}, safe=False)
+
+@login_required
+def comment_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comments = Comment.objects.filter(post=post)         #post.comment_set.all()
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.post = post
+        obj.user = request.user
+        obj.save()
+        return HttpResponseRedirect(reverse("post:comment_post", args=(post_id, )))
+    context = {"post": post, "comments": comments, "form":form}
+    return render(request, "post_comment.html", context)

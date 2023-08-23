@@ -1,0 +1,36 @@
+{% extends 'base_site.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="card-body">
+                {% if users %}
+                    {% for user in users %}
+                        <a href="">{{user.username}}</a><br/>
+                    {% endfor %}
+                {% else %}
+                    <strong class="text-center">No users found</strong>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    {% else %}
+                        <strong>No message found with this user.</strong>
+                    {% endif %}
+                </div>
+                <div class="footer">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <input type="submit" class="btn btn-primary" name="send" />
+                    </form>
+                </div>
+            </div>
+         </div>
+    </div>     
+{% endblock content %}

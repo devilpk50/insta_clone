@@ -34,7 +34,7 @@
                         <span id="like-{{post.id}}">{{ post.like_count }}</span>
                         </div>
                         <div class="float-end">
-                          <a href="" class="text-decoration-none">
+                          <a href="{% url 'post:comment_post' post.id %}" class="text-decoration-none">
                           <i class="fa-regular fa-comment"></i>&nbsp;Comment
                         </a>
                         {{ post.comment_count }}
