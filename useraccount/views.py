@@ -2,7 +2,7 @@ from django.shortcuts import render, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from useraccount.forms import SignupForm, CustomLoginForm
+from useraccount.forms import SignupForm, CustomLoginForm, ProfileUpdateForm
 
 
 def user_login(request):
@@ -32,3 +32,13 @@ def signup(request):
         return HttpResponseRedirect(reverse("user:login"))
     context = {"form": form}
     return render(request, "signup.html", context)
+
+def profile_update(request):
+    form = ProfileUpdateForm(request.POST or None, request.FILES or None, instance=request.user)
+    if form.is_valid():
+        form.save()
+        messages.add_message(request, messages.INFO, "Profile Updated Successfully.")
+        return HttpResponseRedirect(reverse("user:profile_update"))
+    context = {"form": form}
+    return render(request, "profile_update.html", context)
+    
